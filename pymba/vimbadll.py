@@ -10,9 +10,9 @@ if sys_plat == "win32":
     from ctypes.util import find_msvcrt
     _cruntime = cdll.LoadLibrary(find_msvcrt())
     if '64' in platform.architecture()[0]:
-        vimbaC_path = r'C:\Program Files\Allied Vision Technologies\AVTVimba_1.2\VimbaC\Bin\Win64\VimbaC.dll'
+        vimbaC_path = r'C:\Program Files\Allied Vision Technologies\AVTVimba_1.3\VimbaC\Bin\Win64\VimbaC.dll'
     else:
-        vimbaC_path = r'C:\Program Files\Allied Vision Technologies\AVTVimba_1.2\VimbaC\Bin\Win32\VimbaC.dll'
+        vimbaC_path = r'C:\Program Files\Allied Vision Technologies\AVTVimba_1.3\VimbaC\Bin\Win32\VimbaC.dll'
     dll_loader = windll
 else:
     _cruntime = CDLL("libc.so.6")
@@ -30,7 +30,7 @@ with open(vimbaC_path) as thefile:
 class VimbaDLL(object):
 
     """
-    ctypes directives to make the wrapper class work cleanly, 
+    ctypes directives to make the wrapper class work cleanly,
     talks to VimbaC.dll
     """
     # a full list of Vimba API methods
@@ -300,6 +300,10 @@ class VimbaDLL(object):
                               # pointer to frame
                               POINTER(structs.VimbaFrame),
                               c_uint32)                                # size of frame
+
+    # callback for frame queue
+    frameDoneCallback = CFUNCTYPE(c_void_p,                         # camera handle
+                                  POINTER(structs.VimbaFrame))      # pointer to frame
 
     # revoke a frame from the API
     frameRevoke = _vimbaDLL.VmbFrameRevoke
